@@ -1,0 +1,15 @@
+
+
+html,
+body {
+  height: -webkit-fill-available;
+}
+
+#terminal,
+.terminal {
+  height: 100%;
+}
+
+.xterm-viewport {
+  overflow-y: hidden !important;
+}

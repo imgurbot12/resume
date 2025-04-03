@@ -1,0 +1,30 @@
+{
+  "name": "resume",
+  "version": "0.0.1",
+  "description": "Cool Interactive Resume Project",
+  "main": "js/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "resume",
+    "cool",
+    "animation",
+    "terminal"
+  ],
+  "author": "Andrew C Scott (andrewcscott007@gmail.com)",
+  "license": "MIT",
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-webgl": "^0.18.0"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.6.0",
+    "@swc/core": "^1.11.16",
+    "@vitejs/plugin-react-swc": "^3.8.1",
+    "@xterm/xterm": "^5.5.0",
+    "vite": "^6.2.4"
+  }
+}
