@@ -6,6 +6,13 @@
     <script type="module" src="js/main.js"></script>
   </head>
   <body>
-    <div id="terminal"></div>
+    <div class="term draggable">
+      <div class="term-head">
+        <div class="button close"><span>&#215;</span></div>
+        <div class="button minimize"><span>&#8722;</span></div>
+        <div class="button zoom"><span>&#9634;</span></div>
+      </div>
+      <div id="terminal" class="term-body"></div>
+    </div>
   </body>
 </html>

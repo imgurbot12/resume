@@ -1,15 +1,99 @@
 
 
+:root {
+  --text-color: #fff;
+  --text-accent-color: darksalmon;
+  --link-color: darkorange;
+  --bg-1: #f27121;
+  --bg-2: #e94057;
+  --bg-3: #8a2387;
+  --bg-1-social: #f3a183;
+  --bg-2-social: #ec6f66;
+  --username-color: cadetblue;
+  --terminal-bg: #380428e6;
+  --terminal-header-bg: #4a4842;
+  --terminal-button-color: #84837d;
+}
+
 html,
 body {
   height: -webkit-fill-available;
 }
 
-#terminal,
-.terminal {
-  height: 100%;
+body {
+  margin: 0;
+  background: linear-gradient(to right, var(--bg-3), var(--bg-2), var(--bg-1))
 }
 
-.xterm-viewport {
-  overflow-y: hidden !important;
+.term {
+  position: absolute;
+  top: 5vw;
+  left: 5vw;
+
+  width: min(900px, 90vw);
+  height: 450px;
 }
+
+.term-head {
+  cursor: move;
+  height: 30px;
+
+  margin:  0 auto;
+  padding: 0 8px;
+
+  background-color: var(--terminal-header-bg);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.term-head .button {
+  cursor: pointer;
+  width:  14px;
+  height: 14px;
+  margin-right: 8px;
+
+  background-color: var(--terminal-button-color);
+  border: 1px solid #63625f;
+  border-radius: 50%;
+}
+
+.term-head .close,
+.term-head .minimize,
+.term-head .zoom {
+  text-align: center;
+  line-height: 14px;
+}
+
+.term-head .close {
+  background: #ea764f;
+}
+
+.term-head .close span {
+  position: relative;
+  top: 1px;
+  left: -0.5px;
+}
+
+.term-head .minimize span,
+.term-head .zoom span {
+  position: relative;
+  top: 0.5px;
+  left: -0.5px;
+}
+
+.term-head .zoom {
+  font-size: 10px;
+}
+
+
+.term-body {
+  box-shadow: 0 12px 28px #0003,0 2px 4px #0000001a,inset 0 0 0 1px #ffffff0d
+}
+
+/** XTerm Tweaks */
+.xterm-screen { height: 100%; }
+.xterm-viewport { overflow-y: hidden !important; }

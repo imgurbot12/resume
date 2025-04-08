@@ -34,6 +34,11 @@ class Sym {
     this.value = value;
     this.white = white;
   }
+
+  update(value, white) {
+    this.value = value;
+    this.white = white;
+  }
 }
 
 class LineState {
@@ -55,9 +60,9 @@ class LineState {
     const iter = this.line.entries();
 
     while (true) {
-      const item = iter.next().value;
-      if (item === undefined) break;
-      const [i, sym] = item;
+      const item = iter.next();
+      if (item.done) break;
+      const [i, sym] = item.value;
       // if character is null (whitespace)
       if (sym === null) {
         updated = false;
