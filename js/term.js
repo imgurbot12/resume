@@ -13,6 +13,26 @@ const termColor = window
 
 /* Classes */
 
+const Colors = {
+  BLACK: "\x1B[30;1;1m",
+  RED: "\x1B[31;1;1m",
+  GREEN: "\x1B[32;1;1m",
+  YELLOW: "\x1B[33;1;1m",
+  BLUE: "\x1B[34;1;1m",
+  MAGENTA: "\x1B[35;1;1m",
+  CYAN: "\x1B[36;1;1m",
+  WHITE: "\x1B[37;1;1m",
+  GRAY: "\x1B[90;1;1m",
+  B_RED: "\x1B[91;1;1m",
+  B_GREEN: "\x1B[92;1;1m",
+  B_YELLOW: "\x1B[93;1;1m",
+  B_BLUE: "\x1B[94;1;1m",
+  B_MAGENTA: "\x1B[95;1;1m",
+  B_CYAN: "\x1B[96;1;1m",
+  B_WHITE: "\x1B[97;1;1m",
+  RESET: "\x1B[0m",
+};
+
 class Program {
   startup(term, signal) {
     this.term = term;
@@ -86,7 +106,9 @@ class ResumeTerm {
     if (cmd in this.programs) {
       const program = this.programs[cmd];
       this.attach(program);
+      return;
     }
+    this.term.writeln(`resume: Unknown Command: ${cmd}`);
   }
 
   _setcommand(command) {
@@ -215,4 +237,4 @@ class ResumeTerm {
   }
 }
 
-export { Program, ResumeTerm };
+export { Colors, Program, ResumeTerm };
