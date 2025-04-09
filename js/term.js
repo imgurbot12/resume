@@ -82,14 +82,13 @@ class ResumeTerm {
   }
 
   attach(program) {
+    this.program = program;
     program.startup(this.term, (code) => this.detatch(code));
-    this.term.onKey(program.onKey);
   }
 
-  detatch(exitCode) {
-    if (this.program === null) return;
-    this.program.shutdown();
-    this.program = null;
+  detatch(_exitCode) {
+    if (this.program !== null) this.program = null;
+    this.prompt();
   }
 
   add_program(command, program) {
@@ -97,11 +96,13 @@ class ResumeTerm {
   }
 
   prompt() {
-    this.term.write("[guest@resume ~]$ ");
+    const move = "\b".repeat(this.term.cols);
+    const clear = " ".repeat(this.term.cols);
+    const prompt = "[guest@resume ~]$ ";
+    this.term.write(move + clear + move + prompt);
   }
 
   run(command) {
-    console.log("run", command);
     const [cmd, args] = command.split(" ", 1);
     if (cmd in this.programs) {
       const program = this.programs[cmd];
@@ -109,6 +110,7 @@ class ResumeTerm {
       return;
     }
     this.term.writeln(`resume: Unknown Command: ${cmd}`);
+    this.prompt();
   }
 
   _setcommand(command) {
@@ -152,7 +154,10 @@ class ResumeTerm {
   }
 
   onKey(key) {
-    if (this.program !== null) return this.program.onKey(key);
+    if (this.program !== null) {
+      if (key.key == "\x03") return this.program.shutdown(1);
+      return this.program.onKey(key);
+    }
     switch (key.key) {
       // enter/return
       case "\r":
@@ -164,7 +169,9 @@ class ResumeTerm {
         }
         this._setcommand("");
         this.histpos = this.history.length;
-        this.prompt();
+        break;
+      // ctrl+c
+      case "\x03":
         break;
       // ctrl+l
       case "\f":

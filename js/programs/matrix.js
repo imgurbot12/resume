@@ -1,6 +1,8 @@
 /**
- * Matrix Visual Implementation
+ * CMatrix-Syle Program Implementation
  */
+
+import { Program } from "../term.js";
 
 /* Variables */
 
@@ -171,4 +173,39 @@ class Matrix {
   }
 }
 
-export { Matrix };
+class CMatrix extends Program {
+  render(wait) {
+    if (!this.running) return;
+    const rows = this.matrix.draw();
+    for (const row of rows) {
+      this.term.writeln(row.join(" "));
+    }
+    setTimeout(() => this.render(wait), wait);
+  }
+
+  run() {
+    this.running = true;
+    this.matrix = new Matrix(this.term.rows, this.term.cols - 1);
+    this.term.clear();
+    this.render(1000 / 10);
+  }
+
+  onKey(key) {
+    switch (key.key) {
+      // escape / q
+      case "\x1B":
+      case "q":
+        this.shutdown(0);
+        break;
+    }
+    console.log(key);
+  }
+
+  shutdown(exitCode) {
+    this.running = false;
+    this.term.clear();
+    super.shutdown(exitCode);
+  }
+}
+
+export { CMatrix };

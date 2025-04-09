@@ -9,8 +9,7 @@ import { Hal9000 } from "./programs/hal9000.js";
 import { Whoami } from "./programs/whoami.js";
 import { Ping } from "./programs/ping.js";
 import { Fetch } from "./programs/fetch.js";
-
-import { Matrix } from "./matrix.js";
+import { CMatrix } from "./programs/matrix.js";
 
 const term = new ResumeTerm();
 
@@ -40,10 +39,10 @@ term.add_program("cat", hal);
 term.add_program("whoami", new Whoami());
 term.add_program("ping", new Ping());
 term.add_program("neofetch", new Fetch());
+term.add_program("cmatrix", new CMatrix());
 
 term.term.writeln("");
 term.run("neofetch");
-term.prompt();
 
 interact(".draggable")
   .draggable({
