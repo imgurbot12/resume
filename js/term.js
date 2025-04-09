@@ -50,7 +50,11 @@ class Program {
 }
 
 class ResumeTerm {
-  constructor(elementId = "terminal") {
+  constructor({
+    elementId = "terminal",
+    startup = [],
+    programs = {},
+  }) {
     // initialize and prepare terminal
     this.term = new Terminal({
       scrollback: 0,
@@ -71,8 +75,10 @@ class ResumeTerm {
     this.cursor = 0;
     this.command = "";
     this.program = null;
-    this.programs = {};
+    this.programs = programs;
     this.term.onKey((key) => this.onKey(key));
+    // run startup
+    for (const command of startup) this.run(command);
     this.prompt();
   }
 
@@ -95,15 +101,50 @@ class ResumeTerm {
     this.programs[command] = program;
   }
 
-  prompt() {
+  prompt(command = null) {
     const move = "\b".repeat(this.term.cols);
     const clear = " ".repeat(this.term.cols);
     const prompt = "[guest@resume ~]$ ";
-    this.term.write(move + clear + move + prompt);
+    const cmd = command ?? "";
+    this.term.write(move + clear + move + prompt + cmd);
+  }
+
+  autocomplete() {
+    if (this.command.length == 0 || "help".startsWith(this.command)) {
+      this._setcommand("help");
+      this.prompt("help");
+      return;
+    }
+    const entries = Object.entries(this.programs);
+    entries.sort((a, _) => a[1].constructor.description ? -1 : 1);
+    for (const [key, _] of entries) {
+      if (key.startsWith(this.command)) {
+        this._setcommand(key);
+        this.prompt(key);
+        break;
+      }
+    }
+  }
+
+  help() {
+    const prefix = " - ";
+    const lines = [`\x1B[91mhelp${Colors.RESET} : Display help`];
+    for (const [key, program] of Object.entries(this.programs)) {
+      const desc = program.constructor.description;
+      if (!desc) continue;
+      lines.push(`\x1B[91m${key}${Colors.RESET} : ${desc}`);
+    }
+    lines.push("\x1b[3mYou can use the TAB key to complete a command.");
+    lines.push("You can find old commands with the up and down arrows.\x1B[0m");
+    for (const line of lines) {
+      this.term.writeln(prefix + line);
+    }
+    this.prompt();
   }
 
   run(command) {
-    const [cmd, args] = command.split(" ", 1);
+    if (command == "help") return this.help();
+    const [cmd, _] = command.split(" ", 1);
     if (cmd in this.programs) {
       const program = this.programs[cmd];
       this.attach(program);
@@ -169,6 +210,9 @@ class ResumeTerm {
         }
         this._setcommand("");
         this.histpos = this.history.length;
+        break;
+      case "\t":
+        this.autocomplete();
         break;
       // ctrl+c
       case "\x03":

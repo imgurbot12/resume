@@ -1,5 +1,5 @@
 /**
- * CMatrix-Syle Program Implementation
+ * CMatrix-Style Program Implementation
  */
 
 import { Program } from "../term.js";
@@ -174,6 +174,8 @@ class Matrix {
 }
 
 class CMatrix extends Program {
+  static description = "JS cmatrix clone";
+
   render(wait) {
     if (!this.running) return;
     const rows = this.matrix.draw();
@@ -190,6 +192,10 @@ class CMatrix extends Program {
     this.render(1000 / 10);
   }
 
+  resize() {
+    this.matrix = new Matrix(this.term.rows, this.term.cols - 1);
+  }
+
   onKey(key) {
     switch (key.key) {
       // escape / q
@@ -198,7 +204,6 @@ class CMatrix extends Program {
         this.shutdown(0);
         break;
     }
-    console.log(key);
   }
 
   shutdown(exitCode) {

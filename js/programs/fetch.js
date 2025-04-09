@@ -5,6 +5,8 @@
 import { Colors, Program } from "../term.js";
 
 class Fetch extends Program {
+  static description = "neofetch/fastfetch clone";
+
   run() {
     const colors = [
       Colors.GRAY + "●",
