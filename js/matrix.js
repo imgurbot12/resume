@@ -152,7 +152,7 @@ class Matrix {
     for (const state of this.matrix) state.update();
   }
 
-  draw_columns(line, column) {
+  draw_columns(line) {
     if (line >= this.matrix.length) return;
 
     const state = this.matrix[line];

@@ -40,6 +40,8 @@ body {
   color: white;
   border-bottom: 20px black;
   background-color: var(--terminal-header-bg);
+
+  box-shadow: 0 4px 2px -2px #25081c;
 }
 
 .topbar span {
