@@ -126,13 +126,19 @@ class ResumeTerm {
   }
 
   help() {
+    const lengths = Object.keys(this.programs).map((cmd) => cmd.length);
+    const buffer = Math.max(...lengths);
     const prefix = " - ";
-    const lines = [`\x1B[91mhelp${Colors.RESET} : Display help`];
+
+    const buf = " ".repeat(buffer - 4);
+    const lines = [`\x1B[91mhelp${Colors.RESET}${buf} : Display help`];
     for (const [key, program] of Object.entries(this.programs)) {
       const desc = program.constructor.description;
       if (!desc) continue;
-      lines.push(`\x1B[91m${key}${Colors.RESET} : ${desc}`);
+      const buf = " ".repeat(buffer - key.length);
+      lines.push(`\x1B[91m${key}${Colors.RESET}${buf} : ${desc}`);
     }
+
     lines.push("\x1b[3mYou can use the TAB key to complete a command.");
     lines.push("You can find old commands with the up and down arrows.\x1B[0m");
     for (const line of lines) {

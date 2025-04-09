@@ -5,12 +5,14 @@ import * as _interact from "interactjs";
 const interact = _interact.default || _interact;
 
 import { ResumeTerm } from "./term.js";
-import { Hal9000 } from "./programs/hal9000.js";
-import { Whoami } from "./programs/whoami.js";
-import { Ping } from "./programs/ping.js";
+
+import { About } from "./programs/about.js";
 import { Fetch } from "./programs/fetch.js";
+import { Hal9000 } from "./programs/hal9000.js";
 import { CMatrix } from "./programs/matrix.js";
 import { Motd } from "./programs/motd.js";
+import { Ping } from "./programs/ping.js";
+import { Whoami } from "./programs/whoami.js";
 
 const hal = new Hal9000();
 const term = new ResumeTerm({
@@ -23,6 +25,7 @@ const term = new ResumeTerm({
     "ping": new Ping(),
     "whoami": new Whoami(),
 
+    "about": new About(),
     "motd": new Motd(),
     "cmatrix": new CMatrix(),
     "neofetch": new Fetch(),
