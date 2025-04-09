@@ -57,7 +57,6 @@ class ResumeTerm {
   }) {
     // initialize and prepare terminal
     this.term = new Terminal({
-      scrollback: 0,
       cursorWidth: 1,
       theme: { background: termColor },
       fontFamily: "Ubuntu Mono,monospace",

@@ -161,4 +161,7 @@ body {
 
 /** XTerm Tweaks */
 .xterm-screen { height: 100%; }
-.xterm-viewport { overflow-y: hidden !important; }
+.xterm-viewport {
+  scrollbar-color: var(--bg-2-social) var(--terminal-header-bg);
+  scrollbar-width: thin;
+}

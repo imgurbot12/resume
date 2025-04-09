@@ -188,7 +188,7 @@ class CMatrix extends Program {
   run() {
     this.running = true;
     this.matrix = new Matrix(this.term.rows, this.term.cols - 1);
-    this.term.clear();
+    this.term.write("\x1b[?1049h");
     this.render(1000 / 10);
   }
 
@@ -208,7 +208,7 @@ class CMatrix extends Program {
 
   shutdown(exitCode) {
     this.running = false;
-    this.term.clear();
+    this.term.write("\x1b[?1049l");
     super.shutdown(exitCode);
   }
 }
