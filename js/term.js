@@ -4,6 +4,7 @@
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebglAddon } from "@xterm/addon-webgl";
+import { WebLinksAddon } from "@xterm/addon-web-links";
 
 /* Variables */
 
@@ -64,6 +65,7 @@ class ResumeTerm {
     this.fit = new FitAddon();
     this.term.loadAddon(this.fit);
     this.term.loadAddon(new WebglAddon());
+    this.term.loadAddon(new WebLinksAddon());
     // attach terminal to element and resize
     this.term.open(document.getElementById(elementId));
     this.fit.fit();
@@ -79,6 +81,10 @@ class ResumeTerm {
     // run startup
     for (const command of startup) this.run(command);
     this.prompt();
+  }
+
+  focus() {
+    this.term.focus();
   }
 
   resize() {
@@ -128,7 +134,7 @@ class ResumeTerm {
   help() {
     const lengths = Object.keys(this.programs).map((cmd) => cmd.length);
     const buffer = Math.max(...lengths);
-    const prefix = " - ";
+    const prefix = " • ";
 
     const buf = " ".repeat(buffer - 4);
     const lines = [`\x1B[91mhelp${Colors.RESET}${buf} : Display help`];
@@ -212,6 +218,8 @@ class ResumeTerm {
         if (this.command.length != 0) {
           this.history.push(this.command);
           this.run(this.command);
+        } else {
+          this.prompt();
         }
         this._setcommand("");
         this.histpos = this.history.length;

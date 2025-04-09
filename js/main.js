@@ -12,26 +12,8 @@ import { Hal9000 } from "./programs/hal9000.js";
 import { CMatrix } from "./programs/matrix.js";
 import { Motd } from "./programs/motd.js";
 import { Ping } from "./programs/ping.js";
+import { Projects } from "./programs/projects.js";
 import { Whoami } from "./programs/whoami.js";
-
-const hal = new Hal9000();
-const term = new ResumeTerm({
-  programs: {
-    "ls": hal,
-    "id": hal,
-    "groups": hal,
-    "cat": hal,
-
-    "ping": new Ping(),
-    "whoami": new Whoami(),
-
-    "about": new About(),
-    "motd": new Motd(),
-    "cmatrix": new CMatrix(),
-    "neofetch": new Fetch(),
-  },
-  startup: ["motd"],
-});
 
 // cd / mkdir / mv / cp
 // chown / chmod
@@ -47,8 +29,35 @@ const term = new ResumeTerm({
 // open / xdg-open
 // bash / sh / zsh / fish / nushell
 
+// spawn terminal and configure with available programs
+const hal = new Hal9000();
+const term = new ResumeTerm({
+  programs: {
+    "ls": hal,
+    "id": hal,
+    "groups": hal,
+    "cat": hal,
+
+    "ping": new Ping(),
+    "whoami": new Whoami(),
+
+    "about": new About(),
+    "projects": new Projects(),
+    "motd": new Motd(),
+    "cmatrix": new CMatrix(),
+    "neofetch": new Fetch(),
+  },
+  startup: ["motd"],
+});
+
+// autofocus when dragged from terminal header
+const termHeads = document.getElementsByClassName("term-head");
+for (const head of termHeads) head.onclick = () => term.focus();
+
+// configure terminal to make draggable
 interact(".draggable")
   .draggable({
+    allowFrom: ".term-head",
     modifiers: [
       interact.modifiers.restrictRect({ restriction: "parent" }),
     ],
@@ -64,16 +73,3 @@ interact(".draggable")
       },
     },
   });
-
-// let matrix = new Matrix(term.rows, term.cols - 1);
-//
-// function render(draw, wait) {
-//   const rows = matrix.draw();
-//   for (const row of rows) {
-//     term.writeln(row.join(" "));
-//   }
-//
-//   setTimeout(() => render(!draw, wait), wait);
-// }
-//
-// render(true, 1000 / 10);
