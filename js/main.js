@@ -5,9 +5,21 @@ import * as _interact from "interactjs";
 const interact = _interact.default || _interact;
 
 import { ResumeTerm } from "./term.js";
+import { Hal9000 } from "./programs/hal9000.js";
+import { Whoami } from "./programs/whoami.js";
+import { Ping } from "./programs/ping.js";
+
 import { Matrix } from "./matrix.js";
 
+const hal = new Hal9000();
 const term = new ResumeTerm();
+term.add_program("ls", hal);
+term.add_program("id", hal);
+term.add_program("groups", hal);
+term.add_program("cat", hal);
+
+term.add_program("whoami", new Whoami());
+term.add_program("ping", new Ping());
 
 interact(".draggable")
   .draggable({

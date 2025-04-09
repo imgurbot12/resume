@@ -14,18 +14,18 @@ const termColor = window
 /* Classes */
 
 class Program {
-  startup(term) {
+  startup(term, signal) {
     this.term = term;
+    this.signal = signal;
+    this.run();
   }
 
-  onKey(_key) {
-    throw new Error("Method onKey() must be implemented");
-  }
+  run() {}
+  onKey(_key) {}
+  resize() {}
 
-  resize() {
-  }
-
-  shutdown() {
+  shutdown(exitCode = 0) {
+    this.signal(exitCode);
   }
 }
 
@@ -45,12 +45,13 @@ class ResumeTerm {
     this.term.open(document.getElementById(elementId));
     this.fit.fit();
     window.addEventListener("resize", () => this.resize());
-    // configure default program
+    // configure internals
     this.history = [];
     this.histpos = 0;
     this.cursor = 0;
     this.command = "";
     this.program = null;
+    this.programs = {};
     this.term.onKey((key) => this.onKey(key));
     this.prompt();
   }
@@ -61,14 +62,18 @@ class ResumeTerm {
   }
 
   attach(program) {
-    program.startup(term);
+    program.startup(this.term, (code) => this.detatch(code));
     this.term.onKey(program.onKey);
   }
 
-  detatch() {
+  detatch(exitCode) {
     if (this.program === null) return;
     this.program.shutdown();
     this.program = null;
+  }
+
+  add_program(command, program) {
+    this.programs[command] = program;
   }
 
   prompt() {
@@ -77,6 +82,11 @@ class ResumeTerm {
 
   run(command) {
     console.log("run", command);
+    const [cmd, args] = command.split(" ", 1);
+    if (cmd in this.programs) {
+      const program = this.programs[cmd];
+      this.attach(program);
+    }
   }
 
   _setcommand(command) {
@@ -124,6 +134,7 @@ class ResumeTerm {
     switch (key.key) {
       // enter/return
       case "\r":
+        this.term.writeln("");
         this.command = this.command.trim();
         if (this.command.length != 0) {
           this.history.push(this.command);
@@ -131,7 +142,6 @@ class ResumeTerm {
         }
         this._setcommand("");
         this.histpos = this.history.length;
-        this.term.writeln("");
         this.prompt();
         break;
       // ctrl+l
