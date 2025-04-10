@@ -55,7 +55,7 @@ const PROJECTS = [
       Globally scaled infrastructure using unique security
       techniques and technologies implemented
       from the ground up.`,
-    tags: ["security", "python", "php", "encryption"],
+    tags: ["security", "python", "php", "shell", "encryption"],
     links: ["https://itatem.com"],
   },
 ];
@@ -88,7 +88,7 @@ class Projects extends Program {
     for (const project of PROJECTS) {
       const prefix = "    ";
       const description = prefix + splitIntoBlocks(
-        this.term.cols - 4,
+        this.term.cols - 8,
         project.description
           .split("\n")
           .map((line) => line.trim())
@@ -110,4 +110,4 @@ class Projects extends Program {
   }
 }
 
-export { Projects };
+export { Projects, splitIntoBlocks };

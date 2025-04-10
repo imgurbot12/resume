@@ -7,6 +7,7 @@ const interact = _interact.default || _interact;
 import { ResumeTerm } from "./term.js";
 
 import { About } from "./programs/about.js";
+import { Experiences } from "./programs/experiences.js";
 import { Fetch } from "./programs/fetch.js";
 import { Hal9000 } from "./programs/hal9000.js";
 import { CMatrix } from "./programs/matrix.js";
@@ -43,6 +44,7 @@ const term = new ResumeTerm({
 
     "about": new About(),
     "projects": new Projects(),
+    "experiences": new Experiences(),
     "motd": new Motd(),
     "cmatrix": new CMatrix(),
     "neofetch": new Fetch(),
