@@ -77,7 +77,10 @@ class ResumeTerm {
     this.command = "";
     this.program = null;
     this.programs = programs;
-    this.term.onKey((key) => this.onKey(key));
+    // translate data into keypress events (mobile compatable)
+    this.term.onData((data) => {
+      for (const char of data) this.onKey({ key: char });
+    });
     // run startup
     for (const command of startup) this.run(command);
     this.prompt();
