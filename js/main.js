@@ -10,6 +10,7 @@ import { About } from "./programs/about.js";
 import { Experiences } from "./programs/experiences.js";
 import { Fetch } from "./programs/fetch.js";
 import { Hal9000 } from "./programs/hal9000.js";
+import { Hobbies } from "./programs/hobbies.js";
 import { CMatrix } from "./programs/matrix.js";
 import { Motd } from "./programs/motd.js";
 import { Ping } from "./programs/ping.js";
@@ -45,6 +46,7 @@ const term = new ResumeTerm({
     "about": new About(),
     "projects": new Projects(),
     "experiences": new Experiences(),
+    "hobbies": new Hobbies(),
     "motd": new Motd(),
     "cmatrix": new CMatrix(),
     "neofetch": new Fetch(),
