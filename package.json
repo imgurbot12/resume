@@ -27,6 +27,6 @@
     "@swc/core": "^1.11.16",
     "@vitejs/plugin-react-swc": "^3.8.1",
     "@xterm/xterm": "^5.5.0",
-    "vite": "^6.2.4"
+    "vite": ">=6.2.5"
   }
 }

@@ -16,8 +16,6 @@ jobs:
           npm install -g pnpm
           pnpm install
           pnpm build
-          cd dist/
-          tar cvf github-pages.tar.gz *
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3
         with:
