@@ -7,32 +7,17 @@ const interact = _interact.default || _interact;
 import { ResumeTerm } from "./term.js";
 
 import { About } from "./programs/about.js";
+import { Echo } from "./programs/echo.js";
 import { Experiences } from "./programs/experiences.js";
 import { Fetch } from "./programs/fetch.js";
-import { Hal9000 } from "./programs/hal9000.js";
 import { Hobbies } from "./programs/hobbies.js";
 import { CMatrix } from "./programs/matrix.js";
 import { Motd } from "./programs/motd.js";
-import { Ping } from "./programs/ping.js";
 import { Projects } from "./programs/projects.js";
-import { Whoami } from "./programs/whoami.js";
-
-// cd / mkdir / mv / cp
-// chown / chmod
-// dig / nslookup
-// curl / wget
-// ssh
-// man
-// git
-// ftp / telnet / netcat / nc
-// rsync
-// sudo
-// apt / pacman / dnf / yum / flatpak / snap
-// open / xdg-open
-// bash / sh / zsh / fish / nushell
 
 // spawn terminal and configure with available programs
-const hal = new Hal9000();
+const hal = new Echo("I'm afraid I can't do that Dave.");
+
 const term = new ResumeTerm({
   programs: {
     "ls": hal,
@@ -40,8 +25,58 @@ const term = new ResumeTerm({
     "groups": hal,
     "cat": hal,
 
-    "ping": new Ping(),
-    "whoami": new Whoami(),
+    "rm": new Echo("Removing Client FileSystem: 1%......%50.....100% [DONE]"),
+    "cd": new Echo("CDeeze Nuts. Gotem :P"),
+    "mv": new Echo("Eh, I dont wanna."),
+    "cp": new Echo("Copy that."),
+    "mkdir": new Echo("Make this dir, make that dir. Do it yourself!"),
+    "pwd": new Echo("PWD stands for Power Word DeezNuts. Gotem."),
+
+    "cwd": new Echo("This aint windows fam."),
+    "ipconfig": new Echo("Erm acktchually its ifconfig. 🤓"),
+
+    "route": new Echo("Route yourself to my resume :P"),
+    "ip": new Echo("TCP/IP is cool but what about IPX/SPX?"),
+    "ifconfig": new Echo("This command is basically deprecated now. Sadge."),
+
+    "fd": new Echo("Rust tools ftw. Crab gang! 🦀"),
+    "rg": new Echo("Rust tools ftw. Crab gang! 🦀"),
+    "grep": new Echo("Get a grep."),
+    "find": new Echo("Go find yourself first."),
+
+    "ping": new Echo("Pong. Would you like to play a game?"),
+    "whoami": new Echo("That's a pretty existential question don't you think?"),
+    "chown": new Echo("Chown on deeze nuts. Gotem :P"),
+    "chmod": new Echo("I don't have a clever line for this one sorry. :,("),
+    "dig": new Echo("Manual labor isnt my thing really..."),
+    "nslookup": new Echo("NSLookup ur mom. Gotem :P"),
+
+    "ftp": new Echo("Why would you ever use this?"),
+    "telnet": new Echo("Just use netcat bruh."),
+    "netcat": new Echo("The command is 'nc' bruh."),
+    "nc": new Echo("Lol made ya think. No reverse shells today!"),
+
+    "git": new Echo("Git outa town. That ain't gonna work."),
+    "man": new Echo("Man up and use the interwebs nerd."),
+    "ssh": new Echo("This aint your moms terminal."),
+    "rsync": new Echo("Rsync the goat."),
+    "curl": new Echo("You should curl some weights instead."),
+    "wget": new Echo("Wget a lyfe. Gotem :P"),
+
+    "su": new Echo("'guest' is the only user on here fam."),
+    "sudo": new Echo("How about SuDONT?"),
+
+    "apt": new Echo("What exactly are you going to try and install?"),
+    "pacman": new Echo("I use arch btw"),
+    "dnf": new Echo("Fedora is gross."),
+    "yum": new Echo("Fedora is gross (x2)."),
+    "flatpak": new Echo("Flatpak is ok i guess."),
+    "snap": new Echo("Why on gods green earth would you use snap?"),
+
+    "sh": new Echo("This is usually ash/ksh but nobody realizes."),
+    "zsh": new Echo("Zsh is overrated imo."),
+    "bash": new Echo("The ol reliable..."),
+    "fish": new Echo("Fish da best shell hands down."),
 
     "about": new About(),
     "projects": new Projects(),

@@ -69,7 +69,7 @@ class ResumeTerm {
     // attach terminal to element and resize
     this.term.open(document.getElementById(elementId));
     this.fit.fit();
-    window.addEventListener("resize", () => this.resize());
+    globalThis.addEventListener("resize", () => this.resize());
     // configure internals
     this.history = [];
     this.histpos = 0;

@@ -28,7 +28,7 @@ class Fetch extends Program {
       Colors.B_RED + "●",
     ];
     const cores = navigator.hardwareConcurrency;
-    const mem = window.performance.memory ?? FAKE_MEMORY;
+    const mem = globalThis.performance.memory ?? FAKE_MEMORY;
     const total = (mem.jsHeapSizeLimit / 1024 / 1024).toFixed(1);
     const used = (mem.usedJSHeapSize / 1024 / 1024).toFixed();
     const perc = (mem.usedJSHeapSize * 100 / mem.jsHeapSizeLimit).toFixed(1);
