@@ -89,7 +89,8 @@ class ResumeTerm {
 
   resize() {
     this.fit.fit();
-    if (this.program !== null) this.program.resize();
+    if (this.program !== null) return this.program.resize();
+    this.prompt(this.command);
   }
 
   attach(program) {

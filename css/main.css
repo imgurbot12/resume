@@ -29,7 +29,9 @@
 
 html,
 body {
-  height: -webkit-fill-available;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 a:focus { outline: none !important; }
@@ -62,7 +64,9 @@ body {
 
 .sidebar {
   width: 60px;
-  height: calc(100vh - 25px);
+
+  height: calc(100% - 42px);
+  height: -webkit-fill-available;
 
   position: absolute;
   top: 25px;
@@ -101,9 +105,9 @@ body {
 }
 
 .term {
-  position: absolute;
-  top: 5vw;
-  left: 5vw;
+  position: relative;
+  top: 9vw;
+  left: 9vw;
 
   width: min(900px, 90vw);
   height: 450px;
@@ -164,12 +168,23 @@ body {
   font-size: 10px;
 }
 
-
 .term-body {
+  height: 95%;
+  background: var(--terminal-bg);
   box-shadow: 0 12px 28px #0003,0 2px 4px #0000001a,inset 0 0 0 1px #ffffff0d
 }
 
+/** Magic Terminal Drag Corners **/
+
+.corner { width: 10px; height: 10px; position: absolute; opacity: 0; }
+
+.edge-top { top: 0 }
+.edge-bottom { bottom: 0 }
+.edge-left { left: 0 }
+.edge-right { right: 0 }
+
 /** XTerm Tweaks */
+
 .xterm-screen { height: 100%; }
 .xterm-viewport {
   scrollbar-color: var(--bg-2-social) var(--terminal-header-bg);
