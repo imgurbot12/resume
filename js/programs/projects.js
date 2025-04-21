@@ -10,7 +10,7 @@ const PROJECTS = [
   {
     name: "Rmenu",
     description: `
-      A tool I use everday.
+      A tool I use everyday.
       A highly customizable desktop application
       launcher utility for Linux.`,
     tags: ["rust", "desktop", "gui", "linux"],

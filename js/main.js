@@ -4,6 +4,8 @@
 import * as _interact from "interactjs";
 const interact = _interact.default || _interact;
 
+import "./fs/impl.js";
+
 import { ResumeTerm } from "./term.js";
 
 import { About } from "./programs/about.js";
