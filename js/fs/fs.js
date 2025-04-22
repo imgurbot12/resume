@@ -11,6 +11,21 @@ const Errors = {
   NOT_A_DIRECTORY: 4,
 
   is_error: (error) => Number.isInteger(error),
+
+  stringify: function (err) {
+    switch (err) {
+      case this.PERM_DENIED:
+        return "Permission denied";
+      case this.NOT_FOUND:
+        return "No such file or directory";
+      case this.IS_DIRECTORY:
+        return "Is a Directory";
+      case this.NOT_A_DIRECTORY:
+        return "Not a Directory";
+      default:
+        return "Unknown Error";
+    }
+  },
 };
 
 /* Functions */
@@ -29,8 +44,18 @@ function basename(path) {
 function pathJoin(...parts) {
   const last = parts[parts.length - 1];
   if (last.startsWith("/")) return last;
+  // join items together and fix //
   const replace = new RegExp("/" + "{1,}", "g");
-  return parts.join("/").replace(replace, "/");
+  const path = parts.join("/").replace(replace, "/");
+  // resolve ..
+  const items = path.split("/");
+  while (items.includes("..")) {
+    const idx = items.indexOf("..");
+    console.log("splice", idx);
+    items.splice(idx - 1, 2);
+  }
+  // join items together and fix //
+  return items.length > 1 ? items.join("/") : "/";
 }
 
 /* Classes */
@@ -153,6 +178,10 @@ class Directory extends INode {
       perms: new Permissions(perms),
     });
     this.paths = { ...paths, ...more_paths };
+    for (const node of Object.values(this.paths)) {
+      node.uid = (node.uid == 0) ? this.uid : node.uid;
+      node.gid = (node.gid == 0) ? this.gid : node.gid;
+    }
   }
 
   mkdir(uid, gid, name, options) {
@@ -181,11 +210,12 @@ class Directory extends INode {
 }
 
 class FileSystem {
-  constructor(fs, uid = 0, gid = 0) {
-    this.fs = fs ?? Directory();
+  constructor({ root, uid = 0, gid = 0, cwd = "/", usermap = {} }) {
+    this.fs = root ?? Directory();
     this.uid = uid;
     this.gid = gid;
-    this.cwd = "/";
+    this.cwd = cwd;
+    this.users = { ...usermap, "root": 0 };
   }
 
   _cleanpath(path) {
@@ -197,12 +227,13 @@ class FileSystem {
 
   _find_dir(path) {
     path = path.trim();
-    // skip permissions whilst iterating through cwd
     let match = this.fs;
     const dirs = [];
     const stack = [];
+    // build list of directories to iterate through
     if (!path.startsWith("/") && this.cwd) {
       const items = this._cleanpath(this.cwd).split("/").filter((d) => d);
+      //NOTE: skip permissions whilst iterating through cwd
       dirs.push(...items.map((d) => [d, false]));
     }
     const items = this._cleanpath(path).split("/").filter((d) => d);
@@ -223,24 +254,54 @@ class FileSystem {
     return match;
   }
 
+  /**
+   * Get Basename for Current Directory
+   *
+   * @return {String}
+   */
+  current_dir() {
+    if (this.cwd.match(/^\/home\/\w+$/)) {
+      const match = this._find_dir(".");
+      if (Errors.is_error(match)) return match;
+      if (match.uid == this.uid) return "~";
+    }
+    return this.cwd == "/" ? "/" : basename(this.cwd);
+  }
+
+  /**
+   * Change Current Work Directory to Specified Path
+   *
+   * @param {String} path
+   */
   change_dir(path) {
     const match = this._find_dir(path);
     if (Errors.is_error(match)) return match;
+    if (!match.can_exec(this.uid, this.gid)) return Errors.PERM_DENIED;
     this.cwd = pathJoin(this.cwd, path);
   }
 
-  list_dir(path) {
-    const match = this._find_dir(path);
-    if (Errors.is_error(match)) return match;
-    return match.read_dir(this.uid, this.gid);
-  }
-
+  /**
+   * Read a File at the Specified Path
+   *
+   * @param {String} path
+   */
   read_file(path) {
     const [dir, name] = [dirname(path), basename(path)];
     const match = this._find_dir(dir);
     if (Errors.is_error(match)) return match;
     return match.read_file(this.uid, this.gid, name);
   }
+
+  /**
+   * List of All Files/Directories at Specified Path
+   *
+   * @param {String} path
+   */
+  read_dir(path) {
+    const match = this._find_dir(path);
+    if (Errors.is_error(match)) return match;
+    return match.read_dir(this.uid, this.gid);
+  }
 }
 
-export { Directory, Errors, File, FileSystem };
+export { basename, Directory, dirname, Errors, File, FileSystem, pathJoin };

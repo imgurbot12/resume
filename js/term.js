@@ -35,13 +35,15 @@ const Colors = {
 };
 
 class Program {
-  startup(term, signal) {
+  startup(term, ctx, signal) {
+    this.ctx = ctx;
+    this.fs = ctx.filesystem;
     this.term = term;
     this.signal = signal;
-    this.run();
   }
 
-  run() {}
+  autocomplete(..._args) {}
+  run(..._args) {}
   onKey(_key) {}
   resize() {}
 
@@ -55,6 +57,8 @@ class ResumeTerm {
     elementId = "terminal",
     startup = [],
     programs = {},
+    context = {},
+    filesystem = null,
   }) {
     // initialize and prepare terminal
     this.term = new Terminal({
@@ -77,6 +81,8 @@ class ResumeTerm {
     this.command = "";
     this.program = null;
     this.programs = programs;
+    this.context = { ...context, filesystem };
+    this.fs = filesystem;
     // translate data into keypress events (mobile compatable)
     this.term.onData((data) => {
       const keys = (data.charCodeAt(0) == 27) ? [data] : data;
@@ -97,9 +103,10 @@ class ResumeTerm {
     this.prompt(this.command);
   }
 
-  attach(program) {
+  attach(program, args) {
     this.program = program;
-    program.startup(this.term, (code) => this.detatch(code));
+    program.startup(this.term, this.context, (code) => this.detatch(code));
+    program.run(...args);
   }
 
   detatch(_exitCode) {
@@ -114,7 +121,9 @@ class ResumeTerm {
   prompt(command = null) {
     const move = "\b".repeat(this.term.cols);
     const clear = " ".repeat(this.term.cols);
-    const prompt = "[guest@resume ~]$ ";
+    const dir = this.fs ? this.fs.current_dir() : "~";
+    const user = this.fs ? this.fs.users[this.fs.uid] : "guest";
+    const prompt = `[${user}@resume ${dir}]$ `;
     const cmd = command ?? "";
     this.term.write(move + clear + move + prompt + cmd);
   }
@@ -131,7 +140,19 @@ class ResumeTerm {
       if (key.startsWith(this.command)) {
         this._setcommand(key);
         this.prompt(key);
-        break;
+        return;
+      }
+    }
+    // attempt command specific autocomplete
+    const [cmd, ...args] = this.command.split(" ");
+    if (cmd in this.programs) {
+      const program = this.programs[cmd];
+      program.startup(this.term, this.context, null);
+      const match = program.autocomplete(...args);
+      if (match) {
+        this.term.write(match.substring(args[args.length - 1].length));
+        args[args.length - 1] = match;
+        this._setcommand([cmd, ...args].join(" "));
       }
     }
   }
@@ -160,10 +181,10 @@ class ResumeTerm {
 
   run(command) {
     if (command == "help") return this.help();
-    const [cmd, _] = command.split(" ", 1);
+    const [cmd, ...args] = command.split(" ");
     if (cmd in this.programs) {
       const program = this.programs[cmd];
-      this.attach(program);
+      this.attach(program, args);
       return;
     }
     this.term.writeln(`resume: Unknown Command: ${cmd}`);

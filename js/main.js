@@ -8,6 +8,16 @@ import "./fs/impl.js";
 
 import { ResumeTerm } from "./term.js";
 
+import { FILESYSTEM } from "./fs/impl.js";
+import {
+  Cat,
+  ChangeDirectory,
+  Id,
+  Ls,
+  Pwd,
+  Whoami,
+} from "./programs/builtin.js";
+
 import { About } from "./programs/about.js";
 import { Echo } from "./programs/echo.js";
 import { Experiences } from "./programs/experiences.js";
@@ -21,18 +31,21 @@ import { Projects } from "./programs/projects.js";
 const hal = new Echo("I'm afraid I can't do that Dave.");
 
 const term = new ResumeTerm({
+  filesystem: FILESYSTEM,
   programs: {
-    "ls": hal,
-    "id": hal,
+    "cat": new Cat(),
+    "cd": new ChangeDirectory(),
+    "id": new Id(),
+    "ls": new Ls(),
+    "pwd": new Pwd(),
+    "whoami": new Whoami(),
+
     "groups": hal,
-    "cat": hal,
 
     "rm": new Echo("Removing Client FileSystem: 1%......%50.....100% [DONE]"),
-    "cd": new Echo("CDeeze Nuts. Gotem :P"),
     "mv": new Echo("Eh, I dont wanna."),
     "cp": new Echo("Copy that."),
     "mkdir": new Echo("Make this dir, make that dir. Do it yourself!"),
-    "pwd": new Echo("PWD stands for Power Word DeezNuts. Gotem."),
 
     "cwd": new Echo("This aint windows fam."),
     "ipconfig": new Echo("Erm acktchually its ifconfig. 🤓"),
@@ -47,7 +60,6 @@ const term = new ResumeTerm({
     "find": new Echo("Go find yourself first."),
 
     "ping": new Echo("Pong. Would you like to play a game?"),
-    "whoami": new Echo("That's a pretty existential question don't you think?"),
     "chown": new Echo("Chown on deeze nuts. Gotem :P"),
     "chmod": new Echo("I don't have a clever line for this one sorry. :,("),
     "dig": new Echo("Manual labor isnt my thing really..."),

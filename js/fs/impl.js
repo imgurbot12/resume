@@ -20,29 +20,50 @@ const ROOT = new Directory({
       }),
       uid: 1001,
       gid: 1001,
+    }),
+    "andrew": new Directory({
+      "email.txt": new File({ content: "Email Contents" }),
+      uid: 1000,
+      gid: 1000,
       perms: 700,
     }),
   }),
 });
 
-const FILESYSTEM = new FileSystem(ROOT, 1001, 1001);
+const FILESYSTEM = new FileSystem({
+  root: ROOT,
+  uid: 1001,
+  gid: 1001,
+  cwd: "/home/guest",
+  usermap: {
+    1001: "guest",
+    1000: "andrew",
+  },
+});
 
-console.log(FILESYSTEM.list_dir("/home/guest"));
-console.log(FILESYSTEM.read_file("/home/guest/readme.txt"));
+const result = FILESYSTEM.change_dir("/home/andrew");
+console.log(result);
 
-FILESYSTEM.change_dir("/home/guest/test");
+// console.log(FILESYSTEM.list_dir("/home/guest"));
+// console.log(FILESYSTEM.read_file("/home/guest/readme.txt"));
+//
+// FILESYSTEM.change_dir("/home/guest/test");
+//
+// console.log(FILESYSTEM.read_file("test.txt"));
+// console.log(FILESYSTEM.list_dir("../.."));
 
-console.log(FILESYSTEM.read_file("test.txt"));
-console.log(FILESYSTEM.list_dir("../.."));
-
-FILESYSTEM.uid = 1002;
-FILESYSTEM.gid = 1002;
-console.log("=====");
-
-console.log(FILESYSTEM.list_dir("/home/guest"));
-console.log(FILESYSTEM.read_file("/home/guest/readme.txt"));
-console.log(FILESYSTEM.read_file("test.txt"));
-
-console.log(FILESYSTEM.list_dir(".."));
+// FILESYSTEM.uid = 1002;
+// FILESYSTEM.gid = 1002;
+// console.log("=====");
+//
+// console.log(FILESYSTEM.list_dir("/home/guest"));
+// console.log(FILESYSTEM.read_file("/home/guest/readme.txt"));
+// console.log(FILESYSTEM.read_file("test.txt"));
+//
+// console.log(FILESYSTEM.list_dir(".."));
+//
+// FILESYSTEM.uid = 0;
+// FILESYSTEM.gid = 0;
+// console.log
 
 export { FILESYSTEM };
