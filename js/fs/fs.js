@@ -16,6 +16,7 @@ const Errors = {
 /* Functions */
 
 function dirname(path) {
+  if (!path.includes("/")) return ".";
   const index = path.lastIndexOf("/");
   return path.slice(0, index);
 }
@@ -23,6 +24,13 @@ function dirname(path) {
 function basename(path) {
   const index = path.lastIndexOf("/");
   return path.slice(index + 1);
+}
+
+function pathJoin(...parts) {
+  const last = parts[parts.length - 1];
+  if (last.startsWith("/")) return last;
+  const replace = new RegExp("/" + "{1,}", "g");
+  return parts.join("/").replace(replace, "/");
 }
 
 /* Classes */
@@ -88,7 +96,6 @@ class INode {
   }
 
   can_read(uid, gid) {
-    console.log("cmp", uid, gid, this.uid, this.gid, this.perms);
     if ((uid == 0 || this.uid == uid) && this.perms.user.can_read()) {
       return true;
     }
@@ -178,20 +185,37 @@ class FileSystem {
     this.fs = fs ?? Directory();
     this.uid = uid;
     this.gid = gid;
+    this.cwd = "/";
   }
 
   _cleanpath(path) {
-    path = path.trim();
+    path = path.trim().replace(/^\.(?!\.)/, "").replace(/\/+/g, "/");
     path = path.startsWith("/") ? path.substring(1) : path;
     path = path.endsWith("/") ? path.slice(0, -1) : path;
     return path;
   }
 
   _find_dir(path) {
+    path = path.trim();
+    // skip permissions whilst iterating through cwd
     let match = this.fs;
-    const items = path.trim().split("/");
-    for (const name of items) {
-      if (!match.can_exec(this.uid, this.gid)) return Errors.PERM_DENIED;
+    const dirs = [];
+    const stack = [];
+    if (!path.startsWith("/") && this.cwd) {
+      const items = this._cleanpath(this.cwd).split("/").filter((d) => d);
+      dirs.push(...items.map((d) => [d, false]));
+    }
+    const items = this._cleanpath(path).split("/").filter((d) => d);
+    dirs.push(...items.map((d) => [d, true]));
+    // iterate through items in path
+    for (const [name, p] of dirs) {
+      if (p && !match.can_exec(this.uid, this.gid)) return Errors.PERM_DENIED;
+      if (name.match(/^\.{2}$/)) {
+        match = stack.pop();
+        if (!match) return Errors.NOT_FOUND;
+        continue;
+      }
+      stack.push(match);
       match = match.paths[name];
       if (!match) return Errors.NOT_FOUND;
       if (!match.isdir) return Errors.NOT_A_DIRECTORY;
@@ -199,17 +223,20 @@ class FileSystem {
     return match;
   }
 
+  change_dir(path) {
+    const match = this._find_dir(path);
+    if (Errors.is_error(match)) return match;
+    this.cwd = pathJoin(this.cwd, path);
+  }
+
   list_dir(path) {
-    path = this._cleanpath(path);
     const match = this._find_dir(path);
     if (Errors.is_error(match)) return match;
     return match.read_dir(this.uid, this.gid);
   }
 
   read_file(path) {
-    path = this._cleanpath(path);
-    const dir = dirname(path);
-    const name = basename(path);
+    const [dir, name] = [dirname(path), basename(path)];
     const match = this._find_dir(dir);
     if (Errors.is_error(match)) return match;
     return match.read_file(this.uid, this.gid, name);
