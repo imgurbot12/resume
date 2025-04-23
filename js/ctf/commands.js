@@ -7,7 +7,7 @@ import * as _md5 from "md5";
 const md5 = _md5.default || _md5;
 
 import { Program } from "../term.js";
-import { ACCOUNTS, FLAGS } from "../ctf/content.js";
+import { ACCOUNTS, CONGRATS, FLAGS } from "../ctf/content.js";
 
 /* Variables */
 
@@ -91,12 +91,16 @@ class Flag extends Program {
     captured.push(flag);
     this.ctx["flags"] = captured;
 
-    const message = (captured.length < FLAGS.length)
-      ? `Flag captured! Congrats! :)`
-      : `You've completed the CTF! Congratulations!`;
-    this.term.writeln(message);
-
+    if (captured.length < FLAGS.length) {
+      this.term.writeln(`Flag captured! Congrats! :)`);
+    } else {
+      const lines = CONGRATS.split("\n");
+      for (const line of lines) {
+        this.term.writeln(line);
+      }
+    }
     fireworks(captured.length);
+
     this.shutdown(0);
   }
 }

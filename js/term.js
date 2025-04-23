@@ -270,14 +270,14 @@ class ResumeTerm {
         if (this.command.length == 0 || this.cursor == 0) break;
         this._backspace();
         break;
-      // home key
+      // ctrl+a && home key
+      case "\x01":
       case "\x1B[H":
         this._jumpstart();
         break;
       // end key and ctrl+e
       case "\x1B[F":
       case "\x05":
-        console.log("jumping end");
         this._jumpend();
         break;
       // left arrow

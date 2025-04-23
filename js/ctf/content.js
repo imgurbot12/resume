@@ -1,6 +1,8 @@
 /**
  * Reusable Content for CTF
  */
+import * as _md5 from "md5";
+const md5 = _md5.default || _md5;
 
 import { Colors } from "../term.js";
 
@@ -60,9 +62,10 @@ account! muhahaha!
 Try to hack it if you date! Here are the credentials.
 
 username: web
-password: password
+password: ${ACCOUNTS["web"]}
 `.trim();
 
+const md5hash = md5(ACCOUNTS["admin"]);
 const SQLDUMP = `
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
@@ -73,8 +76,26 @@ CREATE TABLE Users (
   EntryDate   DATETIME,
   LastUpdated DATETIME
 );
-INSERT INTO Users VALUES(0,'admin','e10adc3949ba59abbe56e057f20f883e','2025-04-22 21:37:12','2025-04-22 21:37:12');
+INSERT INTO Users VALUES(0,'admin','${md5hash}','2025-04-22 21:37:12','2025-04-22 21:37:12');
 COMMIT;
 `.trim();
 
-export { ACCOUNTS, EMAIL, FLAGS, README, SQLDUMP };
+const CONGRATS = `
+   .-'"'-.
+  / #     \\
+ : #       :     *  *  *         .-'"'-.
+  \\       /     *|_*|_*|*_      / #     \\
+   \\     /  .-'\`|* |* |*| \`'-. : #       :
+    \`'q'\`   |\`-............-'|  \\       /
+      (     |    Congrats!   |   \\     /
+      )     \\   _  .-.   _   /    \`'p'\`
+      (   ,-|'-' '-'  '-' '-'|-,    )
+      ) /\`  \\._            _./  \`\\  (
+        '._    \`""""""""""\`    _.'  )
+          \`''--..........--''\`
+
+         You've completed the CTF!
+             Congratulations!
+`;
+
+export { ACCOUNTS, CONGRATS, EMAIL, FLAGS, README, SQLDUMP };
