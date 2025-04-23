@@ -26,6 +26,14 @@ import { Hobbies } from "./programs/hobbies.js";
 import { CMatrix } from "./programs/matrix.js";
 import { Motd } from "./programs/motd.js";
 import { Projects } from "./programs/projects.js";
+import {
+  Exit,
+  Flag,
+  Md5Sum,
+  ShowServices,
+  SSH,
+  SwitchUser,
+} from "./ctf/commands.js";
 
 // spawn terminal and configure with available programs
 const hal = new Echo("I'm afraid I can't do that Dave.");
@@ -72,13 +80,9 @@ const term = new ResumeTerm({
 
     "git": new Echo("Git outa town. That ain't gonna work."),
     "man": new Echo("Man up and use the interwebs nerd."),
-    "ssh": new Echo("This aint your moms terminal."),
     "rsync": new Echo("Rsync the goat."),
     "curl": new Echo("You should curl some weights instead."),
     "wget": new Echo("Wget a lyfe. Gotem :P"),
-
-    "su": new Echo("'guest' is the only user on here fam."),
-    "sudo": new Echo("How about SuDONT?"),
 
     "apt": new Echo("What exactly are you going to try and install?"),
     "pacman": new Echo("I use arch btw"),
@@ -99,6 +103,15 @@ const term = new ResumeTerm({
     "motd": new Motd(),
     "cmatrix": new CMatrix(),
     "neofetch": new Fetch(),
+
+    "exit": new Exit(),
+    "flag": new Flag(),
+    "md5sum": new Md5Sum(),
+    "su": new SwitchUser(),
+    "ss": new ShowServices(),
+    "ssh": new SSH(),
+    "sudo": new Echo("How about SuDONT?"),
+    "netstat": new Echo("Netstat is deprecated, use 'ss' bruh."),
   },
   startup: ["motd"],
 });

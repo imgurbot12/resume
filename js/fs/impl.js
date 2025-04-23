@@ -2,29 +2,37 @@
  * Fake FileSystem Implementation
  */
 import { Directory, File, FileSystem } from "./fs.js";
+import { EMAIL, FLAGS, README, SQLDUMP } from "../ctf/content.js";
 
 const ROOT = new Directory({
-  "etc": new Directory({
-    "passwd": new File({ content: "passwd", perms: 600 }),
-    "shadow": new File({ content: "shadow", perms: 600 }),
+  "tmp": new Directory({
+    "temp": new File({ content: EMAIL }),
+    "flag": new File({ content: `Congrats! This is a flag: ${FLAGS[0]}` }),
   }),
   "home": new Directory({
     "guest": new Directory({
       "readme.txt": new File({
-        content: "Hello World",
+        content: README,
         uid: 1001,
         gid: 1001,
       }),
-      "test": new Directory({
-        "test.txt": new File({ content: "Test!" }),
+      "ctf": new Directory({
+        "flag": new File({ content: `Congrats! This is a flag: ${FLAGS[1]}` }),
       }),
       uid: 1001,
       gid: 1001,
     }),
-    "andrew": new Directory({
-      "email.txt": new File({ content: "Email Contents" }),
+    "admin": new Directory({
+      "flag": new File({ content: `Congrats! This is a flag: ${FLAGS[2]}` }),
       uid: 1000,
       gid: 1000,
+      perms: 700,
+    }),
+    "web": new Directory({
+      "sqldump.sql": new File({ content: SQLDUMP }),
+      "flag": new File({ content: `Congrats! This is a flag: ${FLAGS[3]}` }),
+      uid: 1002,
+      gid: 1002,
       perms: 700,
     }),
   }),
@@ -36,8 +44,9 @@ const FILESYSTEM = new FileSystem({
   gid: 1001,
   cwd: "/home/guest",
   usermap: {
+    1000: "admin",
     1001: "guest",
-    1000: "andrew",
+    1002: "web",
   },
 });
 

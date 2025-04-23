@@ -8,7 +8,7 @@ import { WebLinksAddon } from "@xterm/addon-web-links";
 
 /* Variables */
 
-const termColor = window
+const termColor = globalThis
   .getComputedStyle(document.body)
   .getPropertyValue("--terminal-bg");
 
@@ -150,8 +150,8 @@ class ResumeTerm {
       program.startup(this.term, this.context, null);
       const match = program.autocomplete(...args);
       if (match) {
-        this.term.write(match.substring(args[args.length - 1].length));
-        args[args.length - 1] = match;
+        this.term.write(match);
+        args[args.length - 1] += match;
         this._setcommand([cmd, ...args].join(" "));
       }
     }

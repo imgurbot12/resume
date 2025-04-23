@@ -1,7 +1,7 @@
 /**
  * Builtin Terminal Programs
  */
-import { basename, Errors } from "../fs/fs.js";
+import { basename, dirname, Errors } from "../fs/fs.js";
 import { Colors, Program } from "../term.js";
 
 /* Functions */
@@ -11,15 +11,25 @@ import { Colors, Program } from "../term.js";
  *
  * @param  {FileSystem} fs      filesystem object
  * @param  {String}     prefix  prefix to match
- * @param  {?bool}      isdir   controls on isdir or not
+ * @param  {?Boolean}   isdir   restrictions on match
  * @return {?String}
  */
 function findNode(fs, prefix, isdir = null) {
-  const base = (prefix.includes("/")) ? basename(prefix) : ".";
+  let base = ".";
+  if (prefix.includes("/")) {
+    if (prefix.match(/^\/\w*$/)) {
+      base = "/";
+      prefix = basename(prefix);
+    } else {
+      base = dirname(prefix);
+      prefix = basename(prefix);
+    }
+  }
   const items = fs.read_dir(base ? base : ".");
   for (const [name, node] of Object.entries(items)) {
     if (isdir != null && node.isdir != isdir) continue;
-    if (name.startsWith(prefix)) return name;
+    const complete = (node.isdir) ? `${name}/` : name;
+    if (name.startsWith(prefix)) return complete.substring(prefix.length);
   }
   return null;
 }
@@ -28,9 +38,14 @@ function findNode(fs, prefix, isdir = null) {
 
 class Cat extends Program {
   autocomplete(file) {
-    return findNode(this.fs, file, false);
+    const match = findNode(this.fs, file);
+    return match;
   }
   run(file) {
+    if (!file) {
+      this.term.writeln("cat: no file specified");
+      return this.shutdown(1);
+    }
     const result = this.fs.read_file(file);
     if (Errors.is_error(result)) {
       this.term.writeln(`cat: ${file}: ${Errors.stringify(result)}`);

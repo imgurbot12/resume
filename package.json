@@ -17,10 +17,12 @@
   "author": "Andrew C Scott (andrewcscott007@gmail.com)",
   "license": "MIT",
   "dependencies": {
+    "@tsparticles/confetti": "^3.8.1",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/addon-web-links": "^0.11.0",
     "@xterm/addon-webgl": "^0.18.0",
-    "interactjs": "^1.10.27"
+    "interactjs": "^1.10.27",
+    "md5": "^2.3.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.6.0",
