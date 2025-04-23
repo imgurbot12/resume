@@ -81,7 +81,7 @@ class ResumeTerm {
     this.command = "";
     this.program = null;
     this.programs = programs;
-    this.context = { ...context, filesystem };
+    this.context = { ...context, programs, filesystem };
     this.fs = filesystem;
     // translate data into keypress events (mobile compatable)
     this.term.onData((data) => {
@@ -136,8 +136,8 @@ class ResumeTerm {
     }
     const entries = Object.entries(this.programs);
     entries.sort((a, _) => a[1].constructor.description ? -1 : 1);
-    for (const [key, _] of entries) {
-      if (key.startsWith(this.command)) {
+    for (const [key, program] of entries) {
+      if (key.startsWith(this.command) && !program.constructor.hide) {
         this._setcommand(key);
         this.prompt(key);
         return;

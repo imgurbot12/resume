@@ -17,6 +17,7 @@ import {
   Pwd,
   Whoami,
 } from "./programs/builtin.js";
+import { GibGames } from "./games/games.js";
 
 import { About } from "./programs/about.js";
 import { Echo } from "./programs/echo.js";
@@ -41,6 +42,8 @@ const hal = new Echo("I'm afraid I can't do that Dave.");
 const term = new ResumeTerm({
   filesystem: FILESYSTEM,
   programs: {
+    "gibgames": new GibGames(),
+
     "cat": new Cat(),
     "cd": new ChangeDirectory(),
     "id": new Id(),

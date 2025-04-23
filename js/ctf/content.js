@@ -96,6 +96,7 @@ const CONGRATS = `
 
          You've completed the CTF!
              Congratulations!
+    Run command 'gibgames' for your reward :)
 `;
 
 export { ACCOUNTS, CONGRATS, EMAIL, FLAGS, README, SQLDUMP };
