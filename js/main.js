@@ -35,10 +35,9 @@ import {
   SSH,
   SwitchUser,
 } from "./ctf/commands.js";
+import { Cowsay } from "./programs/cowsay.js";
 
 // spawn terminal and configure with available programs
-const hal = new Echo("I'm afraid I can't do that Dave.");
-
 const term = new ResumeTerm({
   filesystem: FILESYSTEM,
   programs: {
@@ -51,7 +50,7 @@ const term = new ResumeTerm({
     "pwd": new Pwd(),
     "whoami": new Whoami(),
 
-    "groups": hal,
+    "groups": new Echo("I'm afraid I can't do that Dave."),
 
     "rm": new Echo("Removing Client FileSystem: 1%......%50.....100% [DONE]"),
     "mv": new Echo("Eh, I dont wanna."),
@@ -99,11 +98,25 @@ const term = new ResumeTerm({
     "bash": new Echo("The ol reliable..."),
     "fish": new Echo("Fish da best shell hands down."),
 
+    "vi": new Echo("How old are you to use vi?"),
+    "vim": new Echo("Remember to use `:qa` to exit. :P"),
+    "nvim": new Echo("Neovim my beloved."),
+    "nano": new Echo("I can smell your ignorant fear of vim from here :P"),
+    "emacs": new Echo("Are you going to edit any text with emacs OS?"),
+    "helix": new Echo("Acceptable once they have a plugin system..."),
+
+    "ufw": new Echo("Forwarding all ports to WAN. 391 Clients Connecting..."),
+    "firewalld": new Echo("You're some kind of dirty redhat user aren't you?"),
+
+    "uname": new Echo("Linux resume 1.3.3.7-lts (ResumeOS)"),
+    "lsb_release": new Echo("Distributor ID: ResumeOS"),
+
     "about": new About(),
     "projects": new Projects(),
     "experiences": new Experiences(),
     "hobbies": new Hobbies(),
     "motd": new Motd(),
+    "cowsay": new Cowsay(),
     "cmatrix": new CMatrix(),
     "neofetch": new Fetch(),
 
@@ -114,7 +127,7 @@ const term = new ResumeTerm({
     "ss": new ShowServices(),
     "ssh": new SSH(),
     "sudo": new Echo("How about SuDONT?"),
-    "netstat": new Echo("Netstat is deprecated, use 'ss' bruh."),
+    "netstat": new Echo("Netstat is deprecated, use 'ss'."),
   },
   startup: ["motd"],
 });
