@@ -170,7 +170,6 @@ class SSH extends Program {
     if (!dest.match(/^\w+@(?:localhost|127\.0\.0\.1)$/)) {
       const items = dest.split("@", 2);
       const host = items[items.length - 1];
-      console.log(items);
       this.term.write(`ssh: Could not resolve hostname ${host}: `);
       this.term.writeln("No address associated with hostname");
       return this.shutdown(1);

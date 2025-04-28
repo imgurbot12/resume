@@ -51,7 +51,6 @@ function pathJoin(...parts) {
   const items = path.split("/");
   while (items.includes("..")) {
     const idx = items.indexOf("..");
-    console.log("splice", idx);
     items.splice(idx - 1, 2);
   }
   // join items together and fix //

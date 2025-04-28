@@ -17,12 +17,12 @@ import {
   Pwd,
   Whoami,
 } from "./programs/builtin.js";
-import { GibGames } from "./games/games.js";
 
 import { About } from "./programs/about.js";
 import { Echo } from "./programs/echo.js";
 import { Experiences } from "./programs/experiences.js";
 import { Fetch } from "./programs/fetch.js";
+import { GibGames } from "./programs/gib.js";
 import { Hobbies } from "./programs/hobbies.js";
 import { CMatrix } from "./programs/matrix.js";
 import { Motd } from "./programs/motd.js";

@@ -2,42 +2,14 @@
  * Snake Terminal Game Implementation
  */
 
-import { Colors, Program } from "../term.js";
+import { GameProgram, padCenter, randint } from "./_base.js";
 
 /* Functions */
 
-function padCenter(str, maxLen) {
-  return str.padStart((str.length + maxLen) / 2).padEnd(maxLen);
-}
-
-function randint(min, max) {
-  return Math.trunc(Math.random() * (max - min) + min);
-}
-
 /* Classes */
 
-class Snake extends Program {
+class Snake extends GameProgram {
   static description = "Play snake game";
-
-  clear() {
-    for (let i = 0; i < this.rows; i++) {
-      this.term.writeln(" ".repeat(this.cols));
-    }
-  }
-
-  center(...lines) {
-    for (const [idx, line] of Object.entries(lines)) {
-      this.draw(
-        Math.round(this.cols / 2 - line.length / 2),
-        Math.round(this.rows / 2 - (lines.length / 2 - idx) - 1),
-        line,
-      );
-    }
-  }
-
-  draw(x, y, string) {
-    this.term.write(`\x1B[${y + 1};${x + 1}H${string}`);
-  }
 
   render() {
     this.clear();
@@ -174,8 +146,7 @@ class Snake extends Program {
   }
 
   run() {
-    this.cols = this.term.cols;
-    this.rows = this.term.rows;
+    super.run();
 
     this.snake = [[0, 0]];
     this.collect = null;
@@ -197,11 +168,11 @@ class Snake extends Program {
     this.tick(1000 / 20);
   }
 
-  shutdown() {
+  shutdown(code) {
     this.running = false;
     this.term.write("\x9b?25h");
     this.term.write("\x1b[?1049l");
-    super.shutdown();
+    super.shutdown(code);
   }
 }
 

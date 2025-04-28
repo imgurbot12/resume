@@ -50,29 +50,4 @@ const FILESYSTEM = new FileSystem({
   },
 });
 
-const result = FILESYSTEM.change_dir("/home/andrew");
-console.log(result);
-
-// console.log(FILESYSTEM.list_dir("/home/guest"));
-// console.log(FILESYSTEM.read_file("/home/guest/readme.txt"));
-//
-// FILESYSTEM.change_dir("/home/guest/test");
-//
-// console.log(FILESYSTEM.read_file("test.txt"));
-// console.log(FILESYSTEM.list_dir("../.."));
-
-// FILESYSTEM.uid = 1002;
-// FILESYSTEM.gid = 1002;
-// console.log("=====");
-//
-// console.log(FILESYSTEM.list_dir("/home/guest"));
-// console.log(FILESYSTEM.read_file("/home/guest/readme.txt"));
-// console.log(FILESYSTEM.read_file("test.txt"));
-//
-// console.log(FILESYSTEM.list_dir(".."));
-//
-// FILESYSTEM.uid = 0;
-// FILESYSTEM.gid = 0;
-// console.log
-
 export { FILESYSTEM };

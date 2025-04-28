@@ -1,16 +1,22 @@
 /**
- * Game Utilities
+ * Game Export Utility
  */
 
 import { Program } from "../term.js";
-import { Snake } from "./snake.js";
+import { Snake } from "../games/snake.js";
+import { MineSweeper } from "../games/sweeper.js";
+
+/* Functions */
 
 /**
  * Add Available Games to Accessable Programs
  */
 function addGames(programs) {
   programs["snake"] = new Snake();
+  programs["sweeper"] = new MineSweeper();
 }
+
+/* Classes */
 
 class GibGames extends Program {
   static hide = true;
